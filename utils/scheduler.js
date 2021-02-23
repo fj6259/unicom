@@ -52,7 +52,7 @@ let scheduler = {
     for (let taskName of taskNames) {
       let options = tasks[taskName].options;
       let willTime = moment(randomDate(options));
-      let waitTime = options.dev ? 0 : Math.floor(Math.random() * 600);
+      let waitTime = options.dev ? 0 : Math.floor(Math.random() * 60);
       if (options) {
         if (options.isCircle || options.dev) {
           willTime = moment().startOf("days");
@@ -71,7 +71,7 @@ let scheduler = {
       queues.push({
         taskName: taskName,
         taskState: 0,
-        willTime: willTime.format("YYYY-MM-DD HH:mm:ss"),
+        willTime: willTime.format("YYYY-MM-DD 00:mm:ss"),
         waitTime: waitTime,
       });
     }
@@ -287,8 +287,8 @@ let scheduler = {
       }
 
       // 任务执行
-      let queue = new PQueue({ concurrency: 2 });
-      console.log("👉 调度任务中", "并发数", 2);
+      let queue = new PQueue({ concurrency: 36 });
+      console.log("👉 调度任务中", "并发数", 36);
       for (let task of will_tasks) {
         queue.add(async () => {
           try {
@@ -322,7 +322,7 @@ let scheduler = {
             let newTask = {};
             if (ttt.options) {
               if (!ttt.options.isCircle) {
-                newTask.taskState = 1;
+                newTask.taskState = 0;
                 isupdate = true;
               }
               if (ttt.options.isCircle && ttt.options.intervalTime) {
@@ -332,7 +332,7 @@ let scheduler = {
                 isupdate = true;
               }
             } else {
-              newTask.taskState = 1;
+              newTask.taskState = 0;
               isupdate = true;
             }
 
